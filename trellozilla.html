@@ -1,0 +1,35 @@
+<!doctpye html>
+<html lang="en">
+  <head>
+    <title>Trellozilla</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/aristo/aristo.css">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <div id="content"></div>
+
+    <!-- ICanHaz Templates -->
+    <script id="list" type="text/html">
+      <div class="list">
+        <h2>{{title}}</h2>
+        <ul class="card_list">
+          {{#cards}}
+            <li class="card">
+              <p>{{text}}</p>
+            </li>
+            {{/cards}}
+        </ul>
+      </div>
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+
+    <script src="js/jquery.livequery.js"></script>
+    <script src="js/ICanHaz.js"></script>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
