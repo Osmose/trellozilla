@@ -70,7 +70,7 @@ $(function() {
 
     $('.card_list').livequery(function() {
         $(this).sortable({
-            connectWith: '.list'
+            connectWith: '.card_list'
         });
     });
 });

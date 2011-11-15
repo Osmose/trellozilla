@@ -5,10 +5,21 @@
 
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/aristo/aristo.css">
+    <link rel="stylesheet" href="css/gh-buttons.css">
+
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
-    <div id="content"></div>
+    <div id="sidebar">
+      <h1>Trellozilla</h1>
+      <div class="button-group">
+        <a href="#/list/new/normal" class="button">New List</a>
+        <a href="#/list/new/bugzilla" class="button">New Bugzilla List</a>
+      </div>
+    </div>
+    <div id="content_container">
+      <div id="content"></div>
+    </div>
 
     <!-- ICanHaz Templates -->
     <script id="list" type="text/html">
