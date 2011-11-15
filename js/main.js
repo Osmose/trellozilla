@@ -1,5 +1,51 @@
 (function() {
 
+var List = Model('list', function() {
+    this.persistence(Model.localStorage);
+});
+
+var Trellozilla = {
+    lists: [],
+    content: $('#content'),
+    addList: function(title, cards) {
+        var list = this.createList(title, cards);
+        this.showList(list.id());
+    },
+    createList: function(title, cards) {
+        if (cards === undefined) cards = [];
+
+        var list = new List({
+            title: title,
+            cards: cards
+        });
+        list.save();
+        return list;
+    },
+    showList: function(id) {
+        var list = List.find(id);
+        if (list !== undefined) {
+            this.lists.push(id);
+            this.content.append(ich.list({
+                title: list.attr('title')
+            }));
+        }
+    },
+    save: function() {
+        var data = JSON.stringify({
+            lists: this.lists
+        });
+
+        window.localStorage.setItem('trellozilla',  data);
+    },
+    load: function() {
+        var data = window.localStorage.getItem('trellozilla');
+        if (data !== undefined) {
+            data = JSON.parse(data);
+            this.lists = data.lists;
+        }
+    }
+};
+
 var lists = [
     {
         title: 'Sample List',
@@ -32,24 +78,12 @@ var lists = [
     }
 ];
 
-var content = $('#content');
+var content = $('#content'),
+    bz = Bugzilla,
+    tz = Trellozilla;
 
-var bz, Bugzilla = bz = {
-    API: 'https://api-dev.bugzilla.mozilla.org/test/latest/',
-    search: function(params) {
-        return this._ajax('bug', 'GET', params);
-    },
-    _ajax: function(path, type, data) {
-        return $.ajax({
-            url: this.API + path,
-            type: type,
-            data: data,
-            dataType: 'json'
-        });
-    }
-};
-
-$(function() {
+// Loads test data
+crossroads.addRoute('test', function() {
     for (var k = 0; k < lists.length; k++) {
         var list = lists[k];
         if (list.type === 'bz') {
@@ -67,7 +101,27 @@ $(function() {
             content.append(ich.list(list));
         }
     }
+});
 
+// Add a normal list
+crossroads.addRoute('list/new/normal', function() {
+    var title = prompt("Title:");
+    tz.addList(title);
+});
+
+$(function() {
+    // Hasher handles history
+    hasher.initialized.add(crossroads.parse, crossroads); //parse initial hash
+    hasher.changed.add(crossroads.parse, crossroads); //parse hash changes
+    hasher.init(); //start listening for history change
+
+    // Init app with recent route
+    var curHash = hasher.getHash();
+    if (curHash == '') {
+        hasher.setHash('test');
+    }
+
+    // Make cards sortable
     $('.card_list').livequery(function() {
         $(this).sortable({
             connectWith: '.card_list'
